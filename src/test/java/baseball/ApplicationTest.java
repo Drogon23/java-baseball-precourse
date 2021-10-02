@@ -10,6 +10,7 @@ import org.junit.jupiter.api.Test;
 import org.mockito.MockedStatic;
 
 import nextstep.test.NSTest;
+import nextstep.utils.Console;
 import nextstep.utils.Randoms;
 
 public class ApplicationTest extends NSTest {
@@ -31,6 +32,53 @@ public class ApplicationTest extends NSTest {
 			assertThat(computerNumbers[1]).isEqualTo(3);
 			assertThat(computerNumbers[2]).isEqualTo(5);
 		}
+	}
+
+	@Test
+	void 유저가_정해진_범위_밖의_문자를_입력() {
+		try (final MockedStatic<Console> mockConsole = mockStatic(Console.class)) {
+			mockConsole
+				.when(Console::readLine)
+				.thenReturn("1234", "");
+
+			assertThatExceptionOfType(IllegalArgumentException.class)
+				.isThrownBy(Application::readUserInput);
+
+			assertThatExceptionOfType(IllegalArgumentException.class)
+				.isThrownBy(Application::readUserInput);
+		}
+	}
+
+	@Test
+	void 유저가_정해진_범위_안의_문자를_입력() {
+		try (final MockedStatic<Console> mockConsole = mockStatic(Console.class)) {
+			mockConsole
+				.when(Console::readLine)
+				.thenReturn("123", "12", "1");
+
+			assertThat(Application.readUserInput()).isEqualTo("123");
+			assertThat(Application.readUserInput()).isEqualTo("12");
+			assertThat(Application.readUserInput()).isEqualTo("1");
+		}
+	}
+
+	@Test
+	void 유저가_정해진_범위_밖의_숫자를_입력() {
+		assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(() -> Application.toIntArray("012"));
+		assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(() -> Application.toIntArray("102"));
+		assertThatExceptionOfType(IllegalArgumentException.class)
+			.isThrownBy(() -> Application.toIntArray("560"));
+	}
+
+	@Test
+	void 유저가_정해진_범위_안의_숫자를_입력() {
+		int[] numbers = Application.toIntArray("123");
+
+		assertThat(numbers[0]).isEqualTo(1);
+		assertThat(numbers[1]).isEqualTo(2);
+		assertThat(numbers[2]).isEqualTo(3);
 	}
 
 	@Test
