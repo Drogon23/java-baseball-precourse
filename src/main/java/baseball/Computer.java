@@ -12,12 +12,21 @@ public class Computer {
 	}
 
 	public static int[] makeRandomNumbers() {
-		int[] computerNumbers = new int[3];
-
-		for (int index = 0; index < 3; index++) {
-			computerNumbers[index] = Randoms.pickNumberInRange(START_NUMBER, END_NUMBER);
+		int[] computerNumbers = new int[10];
+		int count = 0;
+		while (count < 3) {
+			int randomNumber = Randoms.pickNumberInRange(START_NUMBER, END_NUMBER);
+			count = increaseCountIfNumberIsUnique(computerNumbers, count, randomNumber);
 		}
 
 		return computerNumbers;
+	}
+
+	private static int increaseCountIfNumberIsUnique(int[] computerNumbers, int count, int randomNumber) {
+		if (computerNumbers[randomNumber] == 0) {
+			computerNumbers[randomNumber] = 1;
+			count++;
+		}
+		return count;
 	}
 }

@@ -17,11 +17,11 @@ public class Application {
 	}
 
 	public static int[] toIntArray(String inputLine) {
-		int[] userNumbers = new int[3];
+		int[] userNumbers = new int[10];
 		for (int index = 0; index < 3; index++) {
 			int number = Character.digit(inputLine.charAt(index), 10);
-			validateNumberInRange(number);
-			userNumbers[index] = number;
+			validateNumber(number, userNumbers);
+			userNumbers[number] = 1;
 		}
 
 		return userNumbers;
@@ -37,8 +37,12 @@ public class Application {
 		return inputLine;
 	}
 
-	private static void validateNumberInRange(int number) {
+	private static void validateNumber(int number, int[] userNumbers) {
 		if (number < 1 || number > 9) {
+			throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다.");
+		}
+
+		if (userNumbers[number] == 1) {
 			throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다.");
 		}
 	}

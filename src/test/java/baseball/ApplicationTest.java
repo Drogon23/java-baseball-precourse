@@ -28,9 +28,9 @@ public class ApplicationTest extends NSTest {
 
 			int[] computerNumbers = Computer.makeRandomNumbers();
 
-			assertThat(computerNumbers[0]).isEqualTo(1);
-			assertThat(computerNumbers[1]).isEqualTo(3);
-			assertThat(computerNumbers[2]).isEqualTo(5);
+			assertThat(computerNumbers[1]).isEqualTo(1);
+			assertThat(computerNumbers[3]).isEqualTo(1);
+			assertThat(computerNumbers[5]).isEqualTo(1);
 		}
 	}
 
@@ -54,31 +54,29 @@ public class ApplicationTest extends NSTest {
 		try (final MockedStatic<Console> mockConsole = mockStatic(Console.class)) {
 			mockConsole
 				.when(Console::readLine)
-				.thenReturn("123", "12", "1");
+				.thenReturn("123");
 
 			assertThat(Application.readUserInput()).isEqualTo("123");
-			assertThat(Application.readUserInput()).isEqualTo("12");
-			assertThat(Application.readUserInput()).isEqualTo("1");
 		}
 	}
 
 	@Test
-	void 유저가_정해진_범위_밖의_숫자를_입력() {
+	void 유저가_정해진_유효하지_않은_숫자를_입력() {
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> Application.toIntArray("012"));
+			.isThrownBy(() -> Application.toIntArray("112"));
 		assertThatExceptionOfType(IllegalArgumentException.class)
 			.isThrownBy(() -> Application.toIntArray("102"));
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> Application.toIntArray("560"));
+			.isThrownBy(() -> Application.toIntArray("666"));
 	}
 
 	@Test
-	void 유저가_정해진_범위_안의_숫자를_입력() {
+	void 유저가_정해진_유효한_숫자를_입력() {
 		int[] numbers = Application.toIntArray("123");
 
-		assertThat(numbers[0]).isEqualTo(1);
-		assertThat(numbers[1]).isEqualTo(2);
-		assertThat(numbers[2]).isEqualTo(3);
+		assertThat(numbers[1]).isEqualTo(1);
+		assertThat(numbers[2]).isEqualTo(1);
+		assertThat(numbers[3]).isEqualTo(1);
 	}
 
 	@Test
