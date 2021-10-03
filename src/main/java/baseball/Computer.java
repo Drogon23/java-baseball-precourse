@@ -1,5 +1,8 @@
 package baseball;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import nextstep.utils.Randoms;
 
 public class Computer {
@@ -11,22 +14,24 @@ public class Computer {
 
 	}
 
-	public static int[] makeRandomNumbers() {
-		int[] computerNumbers = new int[10];
+	public static List<Integer> makeRandomNumbers() {
+		List<Integer> computerNumberList = new ArrayList<>();
 		int count = 0;
+
 		while (count < 3) {
 			int randomNumber = Randoms.pickNumberInRange(START_NUMBER, END_NUMBER);
-			count = increaseCountIfNumberIsUnique(computerNumbers, count, randomNumber);
+			count += addNumberIfNotExists(computerNumberList, randomNumber);
 		}
 
-		return computerNumbers;
+		return computerNumberList;
 	}
 
-	private static int increaseCountIfNumberIsUnique(int[] computerNumbers, int count, int randomNumber) {
-		if (computerNumbers[randomNumber] == 0) {
-			computerNumbers[randomNumber] = 1;
-			count++;
+	private static int addNumberIfNotExists(List<Integer> computerNumberList, int randomNumber) {
+		if (!computerNumberList.contains(randomNumber)) {
+			computerNumberList.add(randomNumber);
+			return 1;
 		}
-		return count;
+		return 0;
 	}
+
 }

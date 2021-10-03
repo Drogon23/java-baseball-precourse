@@ -28,11 +28,11 @@ public class ApplicationTest extends NSTest {
 				.when(() -> Randoms.pickNumberInRange(anyInt(), anyInt()))
 				.thenReturn(1, 3, 5);
 
-			int[] computerNumbers = Computer.makeRandomNumbers();
+			List<Integer> computerNumberList = Computer.makeRandomNumbers();
 
-			assertThat(computerNumbers[1]).isEqualTo(1);
-			assertThat(computerNumbers[3]).isEqualTo(1);
-			assertThat(computerNumbers[5]).isEqualTo(1);
+			assertThat(computerNumberList.get(0)).isEqualTo(1);
+			assertThat(computerNumberList.get(1)).isEqualTo(3);
+			assertThat(computerNumberList.get(2)).isEqualTo(5);
 		}
 	}
 

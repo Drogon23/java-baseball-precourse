@@ -9,7 +9,7 @@ public class Application {
 	public static void main(String[] args) {
 		// TODO 숫자 야구 게임 구현
 
-		int[] computerNumbers = Computer.makeRandomNumbers();
+		List<Integer> computerNumberList = Computer.makeRandomNumbers();
 		while (true) {
 			System.out.print("숫자를 입력해 주세요:");
 			try {
