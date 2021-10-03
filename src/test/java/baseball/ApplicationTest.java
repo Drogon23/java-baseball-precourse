@@ -4,6 +4,8 @@ import static org.assertj.core.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.*;
 import static org.mockito.Mockito.*;
 
+import java.util.List;
+
 import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -63,20 +65,20 @@ public class ApplicationTest extends NSTest {
 	@Test
 	void 유저가_정해진_유효하지_않은_숫자를_입력() {
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> Application.toIntArray("112"));
+			.isThrownBy(() -> Application.toList("112"));
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> Application.toIntArray("102"));
+			.isThrownBy(() -> Application.toList("102"));
 		assertThatExceptionOfType(IllegalArgumentException.class)
-			.isThrownBy(() -> Application.toIntArray("666"));
+			.isThrownBy(() -> Application.toList("666"));
 	}
 
 	@Test
 	void 유저가_정해진_유효한_숫자를_입력() {
-		int[] numbers = Application.toIntArray("123");
+		List<Integer> numbers = Application.toList("123");
 
-		assertThat(numbers[1]).isEqualTo(1);
-		assertThat(numbers[2]).isEqualTo(1);
-		assertThat(numbers[3]).isEqualTo(1);
+		assertThat(numbers.get(0)).isEqualTo(1);
+		assertThat(numbers.get(1)).isEqualTo(2);
+		assertThat(numbers.get(2)).isEqualTo(3);
 	}
 
 	@Test
