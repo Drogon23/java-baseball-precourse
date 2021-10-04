@@ -1,39 +1,168 @@
 package baseball;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Objects;
 
 import nextstep.utils.Console;
 
 public class Application {
+	public static List<Integer> COMPUTER_NUMBER_LIST;
+	public static boolean IS_PLAYING;
+
 	public static void main(String[] args) {
-		// TODO 숫자 야구 게임 구현
-
-		List<Integer> computerNumberList = Computer.makeRandomNumbers();
-		while (true) {
-			System.out.print("숫자를 입력해 주세요:");
-			try {
-				String inputLine = readUserInput();
-				List<Integer> userNumberList = toList(inputLine);
-				System.out.println(userNumberList.get(0) + "" + userNumberList.get(1) + "" + userNumberList.get(2));
-
-			} catch (IllegalArgumentException exception) {
-				System.out.println(exception.getMessage());
-			}
-
+		COMPUTER_NUMBER_LIST = Computer.makeRandomNumbers();
+		IS_PLAYING = true;
+		while (IS_PLAYING) {
+			playGame(COMPUTER_NUMBER_LIST);
 		}
-
 	}
 
-	public static List<Integer> toList(String inputLine) {
+	private static void playGame(List<Integer> computerNumberList) {
+		List<Integer> userNumberList = getUserNumberList();
+		int strike = countStrike(computerNumberList, userNumberList);
+		int ball = countBall(computerNumberList, userNumberList);
+		printResult(strike, ball);
+		if (strike == 3) {
+			System.out.println("3개의 숫자를 모두 맞히셨습니다! 게임 끝");
+			decideToPlayNewGame();
+		}
+	}
+
+	private static List<Integer> getUserNumberList() {
+		System.out.print("숫자를 입력해 주세요:");
+		List<Integer> userNumberList = Collections.emptyList();
+		try {
+			String inputLine = readUserInput();
+			userNumberList = makeUserNumberList(inputLine);
+		} catch (IllegalArgumentException exception) {
+			System.out.println(exception.getMessage());
+		}
+		return userNumberList;
+	}
+
+	public static List<Integer> makeUserNumberList(String inputLine) {
 		List<Integer> userNumberList = new ArrayList<>();
 		for (int index = 0; index < inputLine.length(); index++) {
 			int number = Character.digit(inputLine.charAt(index), 10);
 			validateNumber(number, userNumberList);
 			userNumberList.add(number);
 		}
-
 		return userNumberList;
+	}
+
+	private static void printResult(int strike, int ball) {
+		if (hasStrikeOnly(strike, ball))
+			return;
+		if (hasStrikeAndBall(strike, ball))
+			return;
+		if (hasBallOnly(strike, ball))
+			return;
+		printNothing(strike, ball);
+	}
+
+	private static void printNothing(int strike, int ball) {
+		if (strike == 0 && ball == 0) {
+			System.out.println("낫싱");
+		}
+	}
+
+	private static boolean hasBallOnly(int strike, int ball) {
+		if (strike == 0 && ball > 0) {
+			System.out.println(ball + "볼");
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean hasStrikeOnly(int strike, int ball) {
+		if (strike > 0 && ball == 0) {
+			System.out.println(strike + "스트라이크");
+			return true;
+		}
+		return false;
+	}
+
+	private static boolean hasStrikeAndBall(int strike, int ball) {
+		if (strike > 0 && ball > 0) {
+			System.out.println(strike + "스트라이크 " + ball + "볼");
+			return true;
+		}
+		return false;
+	}
+
+	public static void decideToPlayNewGame() {
+		int inputNumber = 0;
+		while (inputNumber != 1 && inputNumber != 2) {
+			inputNumber = readEndStatus();
+		}
+		if (inputNumber == 1)
+			COMPUTER_NUMBER_LIST = Computer.makeRandomNumbers();
+		if (inputNumber == 2)
+			IS_PLAYING = false;
+	}
+
+	private static int readEndStatus() {
+		int number = 0;
+		try {
+			System.out.println("게임을 새로 시작하려면 1, 종료하려면 2를 입력하세요.");
+			String inputLine = readEndStatusUserInput();
+			number = getEndStatusToInt(inputLine);
+		} catch (IllegalArgumentException exception) {
+			System.out.println(exception.getMessage());
+		}
+		return number;
+	}
+
+	public static int getEndStatusToInt(String inputLine) {
+		int number = Character.digit(inputLine.charAt(0), 10);
+		if (number != 1 && number != 2) {
+			throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다.");
+		}
+
+		return number;
+	}
+
+	public static String readEndStatusUserInput() {
+		String inputLine = Console.readLine();
+		if (inputLine.length() != 1) {
+			throw new IllegalArgumentException("[ERROR] 잘못된 입력입니다.");
+		}
+		return inputLine;
+	}
+
+	public static int countStrike(List<Integer> computerNumberList, List<Integer> userNumberList) {
+		int strike = 0;
+		for (int index = 0; index < userNumberList.size(); index++) {
+			strike += compareNumberIsStrike(computerNumberList, userNumberList, index);
+		}
+		return strike;
+	}
+
+	private static int compareNumberIsStrike(List<Integer> computerNumberList, List<Integer> userNumberList,
+		int index) {
+		if (Objects.equals(computerNumberList.get(index), userNumberList.get(index))) {
+			return 1;
+		}
+		return 0;
+	}
+
+	public static int countBall(List<Integer> computerNumberList, List<Integer> userNumberList) {
+		int ball = 0;
+		for (int index = 0; index < userNumberList.size(); index++) {
+			ball += compareNumberIsBall(computerNumberList, userNumberList, index);
+		}
+		return ball;
+	}
+
+	private static int compareNumberIsBall(List<Integer> computerNumberList, List<Integer> userNumberList, int index) {
+		int computerNumber = computerNumberList.get(index);
+		int userNumber = userNumberList.get(index);
+		if (computerNumber != userNumber && computerNumberList.contains(userNumber)) {
+			return 1;
+		}
+		return 0;
 	}
 
 	public static String readUserInput() {
