@@ -32,14 +32,13 @@ public class Application {
 
 	private static List<Integer> getUserNumberList() {
 		System.out.print("숫자를 입력해 주세요:");
-		List<Integer> userNumberList = Collections.emptyList();
 		try {
 			String inputLine = readUserInput();
-			userNumberList = makeUserNumberList(inputLine);
+			return makeUserNumberList(inputLine);
 		} catch (IllegalArgumentException exception) {
 			System.out.println(exception.getMessage());
+			return getUserNumberList();
 		}
-		return userNumberList;
 	}
 
 	public static List<Integer> makeUserNumberList(String inputLine) {
@@ -53,11 +52,7 @@ public class Application {
 	}
 
 	private static void printResult(int strike, int ball) {
-		if (hasStrikeOnly(strike, ball))
-			return;
-		if (hasStrikeAndBall(strike, ball))
-			return;
-		if (hasBallOnly(strike, ball))
+		if (hasStrikeOrBall(strike, ball))
 			return;
 		printNothing(strike, ball);
 	}
@@ -68,25 +63,13 @@ public class Application {
 		}
 	}
 
-	private static boolean hasBallOnly(int strike, int ball) {
-		if (strike == 0 && ball > 0) {
-			System.out.println(ball + "볼");
-			return true;
-		}
-		return false;
-	}
-
-	private static boolean hasStrikeOnly(int strike, int ball) {
-		if (strike > 0 && ball == 0) {
-			System.out.println(strike + "스트라이크");
-			return true;
-		}
-		return false;
-	}
-
-	private static boolean hasStrikeAndBall(int strike, int ball) {
-		if (strike > 0 && ball > 0) {
-			System.out.println(strike + "스트라이크 " + ball + "볼");
+	private static boolean hasStrikeOrBall(int strike, int ball) {
+		if (strike > 0)
+			System.out.print(strike + "스트라이크 ");
+		if (ball > 0)
+			System.out.print(ball + "볼");
+		if (strike + ball > 0) {
+			System.out.print("\n");
 			return true;
 		}
 		return false;
