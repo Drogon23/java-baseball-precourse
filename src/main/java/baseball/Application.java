@@ -24,21 +24,34 @@ public class Application {
 		int strike = countStrike(computerNumberList, userNumberList);
 		int ball = countBall(computerNumberList, userNumberList);
 		printResult(strike, ball);
+		makeDecisionWhenThreeStrikes(strike);
+	}
+
+	public static void makeDecisionWhenThreeStrikes(int strike) {
 		if (strike == 3) {
 			System.out.println("3개의 숫자를 모두 맞히셨습니다! 게임 끝");
 			decideToPlayNewGame();
 		}
 	}
 
-	private static List<Integer> getUserNumberList() {
+	public static List<Integer> getUserNumberList() {
+		List<Integer> userNumberList = Collections.emptyList();
+		while (userNumberList.size() < 3) {
+			userNumberList = getValidUserNumberList();
+		}
+		return userNumberList;
+	}
+
+	private static List<Integer> getValidUserNumberList() {
 		System.out.print("숫자를 입력해 주세요:");
+		List<Integer> userNumberList = Collections.emptyList();
 		try {
 			String inputLine = readUserInput();
-			return makeUserNumberList(inputLine);
+			userNumberList = makeUserNumberList(inputLine);
 		} catch (IllegalArgumentException exception) {
 			System.out.println(exception.getMessage());
-			return getUserNumberList();
 		}
+		return userNumberList;
 	}
 
 	public static List<Integer> makeUserNumberList(String inputLine) {

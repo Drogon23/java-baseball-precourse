@@ -189,6 +189,28 @@ public class ApplicationTest extends NSTest {
 	}
 
 	@Test
+	void 유저_잘못된_문자_입력_시_에러_메세지_출력() {
+		try (final MockedStatic<Randoms> mockRandoms = mockStatic(Randoms.class)) {
+			mockRandoms
+				.when(() -> Randoms.pickNumberInRange(anyInt(), anyInt()))
+				.thenReturn(1, 3, 5);
+			running("666");
+			verify("[ERROR]", "숫자를 입력해 주세요");
+		}
+	}
+
+	@Test
+	void 게임_종료_시_잘못된_문자_입력() {
+		try (final MockedStatic<Randoms> mockRandoms = mockStatic(Randoms.class)) {
+			mockRandoms
+				.when(() -> Randoms.pickNumberInRange(anyInt(), anyInt()))
+				.thenReturn(1, 3, 5);
+			running("135", "5");
+			verify("3스트라이크", "게임 끝", "[ERROR]");
+		}
+	}
+
+	@Test
 	void 낫싱() {
 		try (final MockedStatic<Randoms> mockRandoms = mockStatic(Randoms.class)) {
 			mockRandoms
